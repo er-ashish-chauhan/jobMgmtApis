@@ -18,7 +18,7 @@ router.get("/", auth, async (req, res) => {
   try {
     const user = await getUserById(req.user.id);
 
-    return res.json({ success: true, data: user });
+    return res.json({ success: true, ...user });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");

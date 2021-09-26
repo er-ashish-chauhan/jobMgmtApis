@@ -20,10 +20,10 @@ const getUserById = async (id) => {
           }
 
           if (rows.length) {
-            resolve(rows[0]);
+            return resolve(rows[0]);
           }
 
-          throw Error("Please login again");
+          return reject("Please login again");
         }
       );
     } catch (error) {
@@ -52,9 +52,9 @@ const getUserBySocialId = async (social_id_type, social_id) => {
           }
 
           if (rows.length) {
-            resolve(rows[0]);
+            return resolve(rows[0]);
           }
-          resolve();
+          return resolve();
         }
       );
     } catch (error) {

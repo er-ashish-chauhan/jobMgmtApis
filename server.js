@@ -11,6 +11,7 @@ app.use(express.static("templates"));
 // Api routes
 app.use("/api/auth", require("./routes/api/auth"));
 app.use("/api/users", require("./routes/api/users"));
+app.use("/api/subscription", require("./routes/api/subscription"));
 
 // Web routes
 app.use("/forgot-password", require("./routes/web/forgotPassword"));
