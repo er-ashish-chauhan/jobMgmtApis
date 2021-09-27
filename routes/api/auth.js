@@ -145,7 +145,7 @@ router.post(
       fcmToken,
       platform,
     } = req.body;
-
+    console.log("req body", req.body);
     // TODO - Authenticate accessToken from social_id
 
     try {
