@@ -128,6 +128,8 @@ router.post(
   "/social-login",
   check("social_id", "Please include a valid social_id").notEmpty(),
   check("social_id_type", "Please include a valid social_id_type").notEmpty(),
+  check("firstName", "Please include a first name").notEmpty(),
+  check("lastName", "Please include a last name").notEmpty(),
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -145,7 +147,7 @@ router.post(
       fcmToken,
       platform,
     } = req.body;
-    console.log("req body", req.body);
+    
     // TODO - Authenticate accessToken from social_id
 
     try {
