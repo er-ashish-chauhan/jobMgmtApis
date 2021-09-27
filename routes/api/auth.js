@@ -128,6 +128,8 @@ router.post(
   "/social-login",
   check("social_id", "Please include a valid social_id").notEmpty(),
   check("social_id_type", "Please include a valid social_id_type").notEmpty(),
+  check("firstName", "Please include a first name").notEmpty(),
+  check("lastName", "Please include a last name").notEmpty(),
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -137,6 +139,9 @@ router.post(
     const {
       social_id_type,
       social_id,
+      firstName,
+      lastName,
+      email,
       accessToken,
       deviceId,
       fcmToken,
@@ -204,9 +209,13 @@ router.post(
 
         connection.query(
           `INSERT INTO users
-          (social_id, social_id_type)
-          VALUES (?, ?)`,
-          [social_id, social_id_type],
+          (social_id, social_id_type, firstName, lastName, email)
+          VALUES (?, ?, ?, ?, ?)`,
+          [social_id,
+            social_id_type,
+            firstName,
+            lastName,
+            email],
           async (err, result) => {
             if (err) {
               throw err;
