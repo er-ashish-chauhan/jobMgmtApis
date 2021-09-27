@@ -130,6 +130,7 @@ router.post(
   check("social_id_type", "Please include a valid social_id_type").notEmpty(),
   async (req, res) => {
     const errors = validationResult(req);
+console.log("req body", req.body);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
