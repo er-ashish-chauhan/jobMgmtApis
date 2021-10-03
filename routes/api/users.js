@@ -3,9 +3,11 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("config");
+const auth = require("../../middleware/auth");
 const { check, validationResult } = require("express-validator");
 
 const connection = require("../../config/connection");
+const { getUserById } = require("../../utils/methods");
 
 // @route    POST api/users
 // @desc     Register new user
@@ -115,5 +117,66 @@ router.post(
     }
   }
 );
+
+// @route    PUT api/users
+// @desc     Save profile information such as height, weight, gender etc.
+// @access   Private
+router.put("/", auth, async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const {
+    weight,
+    height,
+    gender,
+    cardioConditioning,
+    strength,
+    flexibility,
+    mentalWellness,
+  } = req.body;
+
+  try {
+    // Check if user already exists
+    connection.execute(
+      `INSERT INTO userMeta (userId, weight, height, gender, cardioConditioning, strength, flexibility,
+        mentalWellness) VALUES(?,?,?,?,?,?,?,?)
+        ON DUPLICATE KEY UPDATE weight=?, height=?, gender=?, cardioConditioning=?, 
+        strength=?, flexibility=?, mentalWellness=?`,
+      [
+        req.user.id,
+        weight,
+        height,
+        gender,
+        cardioConditioning,
+        strength,
+        flexibility,
+        mentalWellness,
+        weight,
+        height,
+        gender,
+        cardioConditioning,
+        strength,
+        flexibility,
+        mentalWellness,
+      ],
+      async (err, results) => {
+        if (err) {
+          console.error(err);
+          throw err;
+        }
+        const user = await getUserById(req.user.id);
+        res.json({
+          message: "Profile information has been saved successfully",
+          ...user,
+        });
+      }
+    );
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+});
 
 module.exports = router;

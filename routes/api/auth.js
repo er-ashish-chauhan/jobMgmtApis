@@ -130,7 +130,7 @@ router.post(
   check("social_id_type", "Please include a valid social_id_type").notEmpty(),
   async (req, res) => {
     const errors = validationResult(req);
-console.log("req body", req.body);
+    console.log("req body", req.body);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
@@ -146,7 +146,7 @@ console.log("req body", req.body);
       fcmToken,
       platform,
     } = req.body;
-    
+
     // TODO - Authenticate accessToken from social_id
 
     try {
@@ -210,11 +210,7 @@ console.log("req body", req.body);
           `INSERT INTO users
           (social_id, social_id_type, firstName, lastName, email)
           VALUES (?, ?, ?, ?, ?)`,
-          [social_id,
-            social_id_type,
-            firstName,
-            lastName,
-            email],
+          [social_id, social_id_type, firstName, lastName, email],
           async (err, result) => {
             if (err) {
               throw err;
@@ -363,6 +359,10 @@ router.post(
                 });
               }
             );
+          } else {
+            return res
+              .status(400)
+              .json({ message: "This email is not registered" });
           }
         }
       );
