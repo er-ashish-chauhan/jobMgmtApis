@@ -41,7 +41,7 @@ router.get("/recommended", auth, async (req, res) => {
       if (videos?.length) {
         recommended.push({
           text: "Because you want to improve strength",
-          category: strength,
+          category: "Strength",
           videos,
         });
       }
