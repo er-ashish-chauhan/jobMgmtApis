@@ -63,4 +63,35 @@ const getUserBySocialId = async (social_id_type, social_id) => {
   });
 };
 
-module.exports = { getUserById, getUserBySocialId };
+/**
+ * @description Get user details by id
+ * @param {Number} id
+ */
+const getVideosByCategoryId = async (categoryId) => {
+  return new Promise((resolve, reject) => {
+    try {
+      connection.execute(
+        `SELECT categoryId, videoBanner, videoURL, title, shortDescription, firstName, lastName FROM videos left join users on videos.coachId = users.id where videos.categoryId=? ORDER BY videos.created DESC LIMIT 3;`,
+        [categoryId],
+        async (err, rows, fields) => {
+          if (err) {
+            console.error(err);
+            throw err;
+          }
+
+          if (rows.length) {
+            return resolve(rows);
+          } else {
+            return [];
+          }
+
+          return reject("Something went wrong");
+        }
+      );
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+module.exports = { getUserById, getUserBySocialId, getVideosByCategoryId };

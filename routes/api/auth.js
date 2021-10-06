@@ -101,9 +101,10 @@ router.post(
                       console.error(err);
                       throw err;
                     }
+                    let user = await getUserById(rows[0].id);
                     const response = {
+                      ...user,
                       accessToken,
-                      ...rows[0],
                     };
                     delete response.password;
                     res.json(response);

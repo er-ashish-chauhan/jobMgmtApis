@@ -12,6 +12,7 @@ app.use(express.static("templates"));
 app.use("/api/auth", require("./routes/api/auth"));
 app.use("/api/users", require("./routes/api/users"));
 app.use("/api/subscription", require("./routes/api/subscription"));
+app.use("/api/videos", require("./routes/api/videos"));
 
 // Web routes
 app.use("/forgot-password", require("./routes/web/forgotPassword"));
