@@ -112,6 +112,10 @@ router.post(
                 );
               }
             );
+          } else {
+            return res
+              .status(401)
+              .json({ message: "Invalid username or password" });
           }
         }
       );

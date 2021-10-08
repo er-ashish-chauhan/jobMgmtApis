@@ -7,7 +7,11 @@ const auth = require("../../middleware/auth");
 const { check, validationResult } = require("express-validator");
 
 const connection = require("../../config/connection");
-const { getUserById, getVideosByCategoryId } = require("../../utils/methods");
+const {
+  getUserById,
+  getVideosByCategoryId,
+  getRandomVideos,
+} = require("../../utils/methods");
 
 // @route    PUT api/videos/recommended
 // @desc     Get recommended videos on homepage
@@ -25,45 +29,56 @@ router.get("/recommended", auth, async (req, res) => {
     const recommended = [];
     let videos = [];
 
-    if (cardioConditioning > 1) {
-      videos = await getVideosByCategoryId(3);
-      if (videos?.length) {
-        recommended.push({
-          text: "Because you want to improve cardio",
-          category: "Cardio",
-          videos,
-        });
+    if (cardioConditioning || strength || flexibility || mentalWellness) {
+      if (cardioConditioning > 1) {
+        videos = await getVideosByCategoryId(3);
+        if (videos?.length) {
+          recommended.push({
+            text: "Because you want to improve cardio",
+            category: "Cardio",
+            videos,
+          });
+        }
       }
-    }
 
-    if (strength > 1) {
-      videos = await getVideosByCategoryId(5);
-      if (videos?.length) {
-        recommended.push({
-          text: "Because you want to improve strength",
-          category: "Strength",
-          videos,
-        });
+      if (strength > 1) {
+        videos = await getVideosByCategoryId(5);
+        if (videos?.length) {
+          recommended.push({
+            text: "Because you want to improve strength",
+            category: "Strength",
+            videos,
+          });
+        }
       }
-    }
 
-    if (flexibility > 1) {
-      videos = await getVideosByCategoryId(6);
-      if (videos?.length) {
-        recommended.push({
-          text: "Because you want to improve flexibility",
-          category: "Flexibility",
-          videos,
-        });
+      if (flexibility > 1) {
+        videos = await getVideosByCategoryId(6);
+        if (videos?.length) {
+          recommended.push({
+            text: "Because you want to improve flexibility",
+            category: "Flexibility",
+            videos,
+          });
+        }
       }
-    }
 
-    if (mentalWellness > 1) {
-      videos = await getVideosByCategoryId(7);
+      if (mentalWellness > 1) {
+        videos = await getVideosByCategoryId(7);
+        if (videos?.length) {
+          recommended.push({
+            text: "Because you want to improve mental wellness",
+            category: "Mental Wellness",
+            videos,
+          });
+        }
+      }
+    } else {
+      videos = await getRandomVideos();
       if (videos?.length) {
         recommended.push({
-          text: "Because you want to improve mental wellness",
-          category: "Mental Wellness",
+          text: "Recently Added",
+          category: null,
           videos,
         });
       }
