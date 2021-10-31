@@ -9,7 +9,7 @@ const nodemailer = require("nodemailer");
 const { check, validationResult } = require("express-validator");
 
 const connection = require("../../config/connection");
-const { getUserById, getUserBySocialId } = require("../../utils/methods");
+const { getUserById, getUserBySocialId } = require("../controllers/auth");
 
 // @route    GET api/auth
 // @desc     Get user by accessToken

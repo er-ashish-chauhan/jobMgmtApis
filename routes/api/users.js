@@ -7,7 +7,7 @@ const auth = require("../../middleware/auth");
 const { check, validationResult } = require("express-validator");
 
 const connection = require("../../config/connection");
-const { getUserById } = require("../../utils/methods");
+const { getUserById } = require("../controllers/auth");
 
 // @route    POST api/users
 // @desc     Register new user

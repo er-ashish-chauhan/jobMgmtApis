@@ -7,13 +7,15 @@ const auth = require("../../middleware/auth");
 const { check, validationResult } = require("express-validator");
 
 const connection = require("../../config/connection");
+const { getUserById } = require("../controllers/auth");
 const {
-  getUserById,
   getVideosByCategoryId,
   getRandomVideos,
-} = require("../../utils/methods");
+  getRecommendedBrands,
+  getRecommendedCategories,
+} = require("../controllers/videos");
 
-// @route    PUT api/videos/recommended
+// @route    GET api/videos/recommended
 // @desc     Get recommended videos on homepage
 // @access   Private
 router.get("/recommended", auth, async (req, res) => {
@@ -29,6 +31,7 @@ router.get("/recommended", auth, async (req, res) => {
     const recommended = [];
     let videos = [];
 
+    // Get recommended video catgories
     if (cardioConditioning || strength || flexibility || mentalWellness) {
       if (cardioConditioning > 1) {
         videos = await getVideosByCategoryId(3);
@@ -84,7 +87,13 @@ router.get("/recommended", auth, async (req, res) => {
       }
     }
 
-    res.json({ recommended });
+    // Get recommended brands
+    let brands = (await getRecommendedBrands()) ?? [];
+
+    // Get recommended categories
+    let categories = (await getRecommendedCategories()) ?? [];
+
+    res.json({ recommended, brands, categories });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");
