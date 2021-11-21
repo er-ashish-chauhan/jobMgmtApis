@@ -45,7 +45,7 @@ router.get(
           }
 
           if (rows.length) {
-            res.json({...rows[0]})
+            res.json(rows)
             
           } else {
             return res
