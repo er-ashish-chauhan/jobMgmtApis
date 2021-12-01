@@ -79,52 +79,48 @@ router.get(
 // @desc     Insert job meta by jobId
 // @access   Public
 router.post(
-  "/:jobId",
+  "/submitJob",
   async (req, res) => {
     try {
+      const {
+        jobId,
+        entryType,
+        deliveryType,
+        firmId,
+        commodityId,
+        previousSlip,
+        currentSlip,
+        bill } = req.body;
 
-      const { jobId } = req.params;
-
-      const form = formidable({
-        keepExtensions: true,
-        // maxFileSize: 15 * 1024 * 1024,
-        uploadDir: root + "/tmp",
-      });
-      form.parse(req, (err, fields, files) => {
-        let response = {};
-        // check for any error if err. then return with a message
-        if (err) {
-          response.status = "error";
-          response.msg = err.message;
-          return res.status(400).json(response);
-        }
-        // file upload code
-        const oldpath = files.image.path;
-        const ext = path.extname(files.image.path);
-        const file_name = "job_" + Date.now() + ext;
-        const newpath = path.join(root, "/uploads/") + file_name;
-
-        // rename file to a upload folder
-        fs.rename(oldpath, newpath, async function (err) {
-          if (err) throw err;
-
-          connection.execute(
-            `INSERT INTO jobMeta
-            (jobId, image, quantityConfirmed)
-            VALUES(?, ?, ?)`,
-            [jobId, newpath, fields.quantityConfirmed],
-            async (err, result) => {
-              if (err) {
-                console.error(err);
-                throw err;
-              }
-
-              res.json({ success: true })
-            }
-          );
-
+      const validateFields = validateForm(req.body);
+      console.log(validateFields, "validateFields...")
+      if (!validateFields?.flag) {
+        return res.status(401).json({
+          status: res.statusCode,
+          error: { msg: validateFields?.errorMsg }
         });
-      });
+      }
+      connection.execute(
+        `INSERT INTO jobMeta
+          (jobId, entryType, deliveryType, firmId, commodityId, previousSlip, 
+            currentSlip, bill)
+          VALUES(?, ?, ?, ?, ?, ?, ?, ?)`,
+        [jobId, entryType, deliveryType, firmId, commodityId, previousSlip, currentSlip, bill],
+        async (err, result) => {
+          if (err) {
+            console.error(err);
+            throw err;
+          }
+
+          res.json({
+            status: res.statusCode,
+            data: {},
+            success: {
+              msg: "Entry added successfully."
+            }
+          })
+        }
+      );
 
     } catch (err) {
       console.error(err.message);
@@ -132,5 +128,41 @@ router.post(
     }
   }
 );
+
+function validateForm(params) {
+  let flag = true;
+  let errorMsg = "";
+  if (!params?.jobId) {
+    flag = false;
+    errorMsg = "Job id is missing."
+  } else if (!params?.entryType) {
+    flag = false;
+    errorMsg = "entry type is missing."
+  } else if (!params?.deliveryType) {
+    flag = false;
+    errorMsg = "delivery type is missing."
+  } else if (!params?.firmId) {
+    flag = false;
+    errorMsg = "firm id is missing."
+  } else if (!params?.commodityId) {
+    flag = false;
+    errorMsg = "commodity id is missing."
+  } else if (!params?.previousSlip) {
+    flag = false;
+    errorMsg = "previous slip is missing."
+  } else if (!params?.currentSlip) {
+    flag = false;
+    errorMsg = "current slip is missing."
+  } else if (!params?.bill) {
+    flag = false;
+    errorMsg = "bill is missing."
+  }
+
+  return {
+    flag,
+    errorMsg
+  }
+}
+
 
 module.exports = router;

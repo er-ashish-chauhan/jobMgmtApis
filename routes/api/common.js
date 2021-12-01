@@ -50,7 +50,11 @@ router.get(
                     } else {
                         return res
                             .status(401)
-                            .json({ message: "No records found" });
+                            .json({
+                                status: res.statusCode,
+                                data: {},
+                                error: { msg: "No records found" }
+                            });
                     }
                 }
             );
@@ -92,7 +96,11 @@ router.get(
                     } else {
                         return res
                             .status(401)
-                            .json({ message: "No records found" });
+                            .json({
+                                status: res.statusCode,
+                                data: {},
+                                error: { msg: "No records found" }
+                            });
                     }
                 }
             );
@@ -103,5 +111,64 @@ router.get(
     }
 );
 
+// @route    GET api/common/uploadImage
+// @desc     Upload image and return image url
+// @access   Public
+router.post(
+    "/uploadImage",
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        try {
+            const form = formidable({
+                keepExtensions: true,
+                // maxFileSize: 15 * 1024 * 1024,
+                uploadDir: root + "/tmp",
+            });
+            form.parse(req, (err, fields, files) => {
+                let response = {};
+                // check for any error if err. then return with a message
+                if (err) {
+                    response.status = "error";
+                    response.msg = err.message;
+                    return res.status(400).json(response);
+                }
+                // file upload code
+                if (!files?.image) {
+                    return res.status(400).json({
+                        status: res.statusCode,
+                        data: {},
+                        error: { msg: "Please upload a file." }
+                    });
+                }
+                const oldpath = files.image.path;
+                const ext = path.extname(files.image.path);
+                const file_name = "job_" + Date.now() + ext;
+                const newpath = path.join(root, "/uploads/") + file_name;
+
+                // rename file to a upload folder
+                fs.rename(oldpath, newpath, async function (err) {
+                    if (err) throw err;
+                    const imagePath = newpath.split("/");
+                    imagePath.splice(0, 4)
+                    const result = {
+                        status: res.statusCode,
+                        data: {
+                            image: imagePath.join().replaceAll(",", "/"),
+                            message: "Image uploaded successfully."
+                        }
+                    }
+                    res.json(result)
+                });
+            });
+
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).send("Server error");
+        }
+    }
+);
 
 module.exports = router;
