@@ -111,7 +111,7 @@ router.get(
     }
 );
 
-// @route    GET api/common/uploadImage
+// @route    POST api/common/uploadImage
 // @desc     Upload image and return image url
 // @access   Public
 router.post(

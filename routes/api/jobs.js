@@ -75,7 +75,7 @@ router.get(
 );
 
 
-// @route    POST api/jobs
+// @route    POST api/jobs/submitJob
 // @desc     Insert job meta by jobId
 // @access   Public
 router.post(
@@ -83,7 +83,6 @@ router.post(
   async (req, res) => {
     try {
       const {
-        jobId,
         entryType,
         deliveryType,
         firmId,
@@ -102,9 +101,9 @@ router.post(
       }
       connection.execute(
         `INSERT INTO jobMeta
-          (jobId, entryType, deliveryType, firmId, commodityId, previousSlip, 
+          (entryType, deliveryType, firmId, commodityId, previousSlip, 
             currentSlip, bill)
-          VALUES(?, ?, ?, ?, ?, ?, ?, ?)`,
+          VALUES(?, ?, ?, ?, ?, ?, ?)`,
         [jobId, entryType, deliveryType, firmId, commodityId, previousSlip, currentSlip, bill],
         async (err, result) => {
           if (err) {
@@ -132,10 +131,7 @@ router.post(
 function validateForm(params) {
   let flag = true;
   let errorMsg = "";
-  if (!params?.jobId) {
-    flag = false;
-    errorMsg = "Job id is missing."
-  } else if (!params?.entryType) {
+  if (!params?.entryType) {
     flag = false;
     errorMsg = "entry type is missing."
   } else if (!params?.deliveryType) {
