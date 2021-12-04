@@ -89,7 +89,12 @@ router.post(
         commodityId,
         previousSlip,
         currentSlip,
-        bill } = req.body;
+        userId,
+        billNo,
+        bill,
+        grossWeight,
+        tareWeight,
+        netWeight } = req.body;
 
       const validateFields = validateForm(req.body);
       console.log(validateFields, "validateFields...")
@@ -102,9 +107,10 @@ router.post(
       connection.execute(
         `INSERT INTO jobMeta
           (entryType, deliveryType, firmId, commodityId, previousSlip, 
-            currentSlip, bill)
-          VALUES(?, ?, ?, ?, ?, ?, ?)`,
-        [jobId, entryType, deliveryType, firmId, commodityId, previousSlip, currentSlip, bill],
+            currentSlip, bill, billNo, addedBy, grossWeight, tareWeight, netWeight)
+          VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [entryType, deliveryType, firmId, commodityId, previousSlip, currentSlip, bill,
+          billNo, userId, grossWeight, tareWeight, netWeight],
         async (err, result) => {
           if (err) {
             console.error(err);
@@ -133,25 +139,40 @@ function validateForm(params) {
   let errorMsg = "";
   if (!params?.entryType) {
     flag = false;
-    errorMsg = "entry type is missing."
+    errorMsg = "Entry type is missing."
   } else if (!params?.deliveryType) {
     flag = false;
-    errorMsg = "delivery type is missing."
+    errorMsg = "Delivery type is missing."
   } else if (!params?.firmId) {
     flag = false;
-    errorMsg = "firm id is missing."
+    errorMsg = "Firm id is missing."
   } else if (!params?.commodityId) {
     flag = false;
-    errorMsg = "commodity id is missing."
+    errorMsg = "Commodity id is missing."
   } else if (!params?.previousSlip) {
     flag = false;
-    errorMsg = "previous slip is missing."
+    errorMsg = "Previous slip is missing."
   } else if (!params?.currentSlip) {
     flag = false;
-    errorMsg = "current slip is missing."
+    errorMsg = "Current slip is missing."
   } else if (!params?.bill) {
     flag = false;
-    errorMsg = "bill is missing."
+    errorMsg = "Bill is missing."
+  } else if (!params?.billNo) {
+    flag = false;
+    errorMsg = "Bill no. is missing."
+  } else if (!params?.userId) {
+    flag = false;
+    errorMsg = "User id is missing."
+  } else if (!params?.grossWeight) {
+    flag = false;
+    errorMsg = "Gross weight is missing."
+  } else if (!params?.tareWeight) {
+    flag = false;
+    errorMsg = "Tare weight is missing."
+  } else if (!params?.netWeight) {
+    flag = false;
+    errorMsg = "Net weight is missing."
   }
 
   return {
