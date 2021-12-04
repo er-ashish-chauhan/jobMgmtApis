@@ -92,9 +92,10 @@ router.post(
         userId,
         billNo,
         bill,
-        grossWeight,
-        tareWeight,
-        netWeight } = req.body;
+        // grossWeight,
+        // tareWeight,
+        // netWeight 
+      } = req.body;
 
       const validateFields = validateForm(req.body);
       console.log(validateFields, "validateFields...")
@@ -107,10 +108,10 @@ router.post(
       connection.execute(
         `INSERT INTO jobMeta
           (entryType, deliveryType, firmId, commodityId, previousSlip, 
-            currentSlip, bill, billNo, addedBy, grossWeight, tareWeight, netWeight)
-          VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            currentSlip, bill, billNo, addedBy)
+          VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [entryType, deliveryType, firmId, commodityId, previousSlip, currentSlip, bill,
-          billNo, userId, grossWeight, tareWeight, netWeight],
+          billNo, userId],
         async (err, result) => {
           if (err) {
             console.error(err);
@@ -164,15 +165,6 @@ function validateForm(params) {
   } else if (!params?.userId) {
     flag = false;
     errorMsg = "User id is missing."
-  } else if (!params?.grossWeight) {
-    flag = false;
-    errorMsg = "Gross weight is missing."
-  } else if (!params?.tareWeight) {
-    flag = false;
-    errorMsg = "Tare weight is missing."
-  } else if (!params?.netWeight) {
-    flag = false;
-    errorMsg = "Net weight is missing."
   }
 
   return {
