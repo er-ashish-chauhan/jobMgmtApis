@@ -92,9 +92,11 @@ router.post(
         userId,
         billNo,
         bill,
-        grossWeight,
-        tareWeight,
-        netWeight 
+        currentGrossWeight,
+        currentTareWeight,
+        currentNetWeight,
+        previousSlipNo,
+        currentSlipNo
       } = req.body;
 
       const validateFields = validateForm(req.body);
@@ -108,10 +110,11 @@ router.post(
       connection.execute(
         `INSERT INTO jobMeta
           (entryType, deliveryType, firmId, commodityId, previousSlip, 
-            currentSlip, bill, billNo, addedBy, grossWeight, tareWeight, netWeight)
-          VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            currentSlip, bill, billNo, addedBy, cGrossWeight, cTareWeight, cNetWeight, previousSlipNo, currentSlipNo)
+          VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [entryType, deliveryType, firmId, commodityId, previousSlip, currentSlip, bill,
-          billNo, userId, grossWeight, tareWeight, netWeight],
+          billNo, userId, currentGrossWeight, currentTareWeight, currentNetWeight,
+          previousSlipNo, currentSlipNo],
         async (err, result) => {
           if (err) {
             console.error(err);
@@ -165,15 +168,21 @@ function validateForm(params) {
   } else if (!params?.userId) {
     flag = false;
     errorMsg = "User id is missing."
-  } else if (!params?.grossWeight) {
+  } else if (!params?.currentGrossWeight) {
     flag = false;
     errorMsg = "Gross weight is missing."
-  } else if (!params?.tareWeight) {
+  } else if (!params?.currentTareWeight) {
     flag = false;
     errorMsg = "Tare weight is missing."
-  } else if (!params?.netWeight) {
+  } else if (!params?.currentNetWeight) {
     flag = false;
     errorMsg = "Net weight is missing."
+  } else if (!params?.previousSlipNo) {
+    flag = false;
+    errorMsg = "Previous slip no. is missing."
+  } else if (!params?.currentSlipNo) {
+    flag = false;
+    errorMsg = "Current slip no. is missing."
   }
 
   return {
