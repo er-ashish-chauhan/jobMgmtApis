@@ -96,7 +96,8 @@ router.post(
         currentTareWeight,
         currentNetWeight,
         previousSlipNo,
-        currentSlipNo
+        currentSlipNo,
+        noofbags
       } = req.body;
 
       const validateFields = validateForm(req.body);
@@ -110,11 +111,11 @@ router.post(
       connection.execute(
         `INSERT INTO jobMeta
           (entryType, deliveryType, firmId, commodityId, previousSlip, 
-            currentSlip, bill, billNo, addedBy, cGrossWeight, cTareWeight, cNetWeight, previousSlipNo, currentSlipNo)
-          VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            currentSlip, bill, billNo, addedBy, cGrossWeight, cTareWeight, cNetWeight, previousSlipNo, currentSlipNo, noOfBags)
+          VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [entryType, deliveryType, firmId, commodityId, previousSlip, currentSlip, bill,
           billNo, userId, currentGrossWeight, currentTareWeight, currentNetWeight,
-          previousSlipNo, currentSlipNo],
+          previousSlipNo, currentSlipNo, noofbags],
         async (err, result) => {
           if (err) {
             console.error(err);
@@ -183,6 +184,9 @@ function validateForm(params) {
   } else if (!params?.currentSlipNo) {
     flag = false;
     errorMsg = "Current slip no. is missing."
+  } else if (!params?.noofbags) {
+    flag = false;
+    errorMsg = "No. of bags are missing."
   }
 
   return {
