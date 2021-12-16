@@ -13,7 +13,7 @@ const connection = require("../../config/connection");
 // @access   Public
 router.post(
   "/",
-  check("email", "Please include a valid email").isEmail(),
+  // check("email", "Please include a valid email").isEmail(),
   check("password", "Password is required").exists(),
   async (req, res) => {
     const errors = validationResult(req);
@@ -26,7 +26,7 @@ router.post(
     try {
       // Get user
       connection.execute(
-        "SELECT * FROM `users` WHERE `email` = ?",
+        "SELECT * FROM `users` WHERE `email` = ? AND `role` = 3",
         [email],
         async (err, rows, fields) => {
           if (err) {
@@ -43,10 +43,14 @@ router.post(
 
             if (!isMatch) {
               // Wrong password
-              return res.status(400).json({
-                errors: [{ msg: "Invalid Credentials" }],
-                message: "Invalid Credentials",
-              });
+              return res
+                .status(400)
+                .json({
+                  status: res.statusCode,
+                  data: {},
+                  error: { msg: "Invalid Credentials" },
+                  message: "Invalid Credentials",
+                });
             }
 
             const payload = {
@@ -61,9 +65,9 @@ router.post(
               { expiresIn: "60 days" },
               (err, accessToken) => {
                 if (err) throw err;
-                  let data = {...rows[0]}
-                  delete data['password']
-                  res.json(data)     
+                let data = { ...rows[0] }
+                delete data['password']
+                res.json(data)
               }
             );
           } else {
