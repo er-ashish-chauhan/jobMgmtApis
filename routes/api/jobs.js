@@ -97,7 +97,11 @@ router.post(
         currentNetWeight,
         previousSlipNo,
         currentSlipNo,
-        noofbags
+        noofbags,
+        truckNo,
+        currentDate,
+        kantaSlip,
+        kantaSlipNo,
       } = req.body;
 
       const validateFields = validateForm(req.body);
@@ -111,11 +115,12 @@ router.post(
       connection.execute(
         `INSERT INTO jobMeta
           (entryType, deliveryType, firmId, commodityId, previousSlip, 
-            currentSlip, bill, billNo, addedBy, cGrossWeight, cTareWeight, cNetWeight, previousSlipNo, currentSlipNo, noOfBags)
-          VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            currentSlip, bill, billNo, addedBy, cGrossWeight, cTareWeight, cNetWeight, previousSlipNo, currentSlipNo, 
+            noOfBags, truckNo, created, kantaSlip, kantaSlipNo)
+          VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [entryType, deliveryType, firmId, commodityId, previousSlip, currentSlip, bill,
           billNo, userId, currentGrossWeight, currentTareWeight, currentNetWeight,
-          previousSlipNo, currentSlipNo, noofbags],
+          previousSlipNo, currentSlipNo, noofbags, truckNo, currentDate, kantaSlip, kantaSlipNo],
         async (err, result) => {
           if (err) {
             console.error(err);
@@ -154,9 +159,6 @@ function validateForm(params) {
   } else if (!params?.commodityId) {
     flag = false;
     errorMsg = "Commodity id is missing."
-  } else if (!params?.previousSlip) {
-    flag = false;
-    errorMsg = "Previous slip is missing."
   } else if (!params?.currentSlip) {
     flag = false;
     errorMsg = "Current slip is missing."
@@ -178,9 +180,6 @@ function validateForm(params) {
   } else if (!params?.currentNetWeight) {
     flag = false;
     errorMsg = "Net weight is missing."
-  } else if (!params?.previousSlipNo) {
-    flag = false;
-    errorMsg = "Previous slip no. is missing."
   } else if (!params?.currentSlipNo) {
     flag = false;
     errorMsg = "Current slip no. is missing."
