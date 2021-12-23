@@ -87,7 +87,7 @@ router.post(
         deliveryType,
         firmId,
         commodityId,
-        previousSlip,
+        previousSlip = null,
         currentSlip,
         userId,
         billNo,
@@ -95,13 +95,13 @@ router.post(
         currentGrossWeight,
         currentTareWeight,
         currentNetWeight,
-        previousSlipNo,
+        previousSlipNo = null,
         currentSlipNo,
         noofbags,
         truckNo,
         currentDate,
-        kantaSlip,
-        kantaSlipNo,
+        kantaSlip = null,
+        kantaSlipNo = null,
       } = req.body;
 
       const validateFields = validateForm(req.body);
@@ -115,12 +115,10 @@ router.post(
       connection.execute(
         `INSERT INTO jobMeta
           (entryType, deliveryType, firmId, commodityId, previousSlip, 
-            currentSlip, bill, billNo, addedBy, cGrossWeight, cTareWeight, cNetWeight, previousSlipNo, currentSlipNo, 
-            noOfBags, truckNo, created, kantaSlip, kantaSlipNo)
-          VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            currentSlip, bill, billNo, addedBy, cGrossWeight, cTareWeight, cNetWeight, previousSlipNo, currentSlipNo, noOfBags, truckNo, kantaSlip, kantaSlipNo, recordCreated) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [entryType, deliveryType, firmId, commodityId, previousSlip, currentSlip, bill,
           billNo, userId, currentGrossWeight, currentTareWeight, currentNetWeight,
-          previousSlipNo, currentSlipNo, noofbags, truckNo, currentDate, kantaSlip, kantaSlipNo],
+          previousSlipNo, currentSlipNo, noofbags, truckNo, kantaSlip, kantaSlipNo, currentDate],
         async (err, result) => {
           if (err) {
             console.error(err);
