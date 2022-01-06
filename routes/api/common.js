@@ -12,6 +12,16 @@ const { query, check, validationResult } = require("express-validator");
 const connection = require("../../config/connection");
 const { root } = require('../../general')
 
+// var admin = require("firebase-admin");
+const FIREBASE_SERVER_KEY = "AAAA0hjZ4kQ:APA91bHbZ9-1DPhGGs2V-2EcbJym7EH1jEQqjaVm9XgJ2hxFPNJdjCDcmMR1Kph5G-oPsQpCnqPHE7F3f0Fab1KMxyypB5nQ-v49KqvmpIzPR0VgesRLST1Iq3bURp6N7bhheYLyLcsn";
+var FCM = require('fcm-node');
+var fcm = new FCM(FIREBASE_SERVER_KEY);
+// admin.initializeApp({
+//     credential: admin.credential.applicationDefault(),
+//     databaseURL: "https://aseiko-a9f2c.firebaseio.com",
+//     projectId: 'aseiko-a9f2c',
+// })
+
 // @route    GET api/common/firms
 // @desc     Get firms listing
 // @access   Public
@@ -24,12 +34,9 @@ router.get(
         }
 
         const { searchText } = req.query;
-
         try {
-
             const queryForExecute = searchText ? 'SELECT * FROM firm Where firm_name like "%' + searchText + '%"'
                 : `SELECT * FROM firm`
-
             // Get firms
             connection.execute(
                 queryForExecute,
@@ -162,6 +169,49 @@ router.post(
                     }
                     res.json(result)
                 });
+            });
+
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).send("Server error");
+        }
+    }
+);
+
+router.post(
+    "/sendPush",
+    async (req, res) => {
+        const { userToken, notifymessage } = req.body;
+        try {
+            var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
+                to: userToken, 
+                notification: {
+                    title: 'Aseiko Skin', 
+                    body: notifymessage 
+                },
+                data: { }
+            };
+            
+            fcm.send(message, function(err, response){
+                if (err) {
+                    console.log("Something has gone wrong!");
+                    const result = {
+                        status: res.statusCode,
+                        data: {
+                            message: "Something has gone wrong!"
+                        }
+                    }
+                    res.json(result)
+                } else {
+                    const result = {
+                        status: res.statusCode,
+                        data: {
+                            message: "notification sent successfully."
+                        }
+                    }
+                    res.json(result)
+                    console.log("Successfully sent with response: ", response);
+                }
             });
 
         } catch (err) {
