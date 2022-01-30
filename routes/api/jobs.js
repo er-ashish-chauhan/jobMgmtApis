@@ -145,46 +145,46 @@ router.post(
 function validateForm(params) {
   let flag = true;
   let errorMsg = "";
-  if (!params?.entryType) {
-    flag = false;
-    errorMsg = "Entry type is missing."
-  } else if (!params?.deliveryType) {
-    flag = false;
-    errorMsg = "Delivery type is missing."
-  } else if (!params?.firmId) {
-    flag = false;
-    errorMsg = "Firm id is missing."
-  } else if (!params?.commodityId) {
-    flag = false;
-    errorMsg = "Commodity id is missing."
-  } else if (!params?.currentSlip) {
-    flag = false;
-    errorMsg = "Current slip is missing."
-  } else if (!params?.bill) {
-    flag = false;
-    errorMsg = "Bill is missing."
-  } else if (!params?.billNo) {
-    flag = false;
-    errorMsg = "Bill no. is missing."
-  } else if (!params?.userId) {
-    flag = false;
-    errorMsg = "User id is missing."
-  } else if (!params?.currentGrossWeight) {
-    flag = false;
-    errorMsg = "Gross weight is missing."
-  } else if (!params?.currentTareWeight) {
-    flag = false;
-    errorMsg = "Tare weight is missing."
-  } else if (!params?.currentNetWeight) {
-    flag = false;
-    errorMsg = "Net weight is missing."
-  } else if (!params?.currentSlipNo) {
-    flag = false;
-    errorMsg = "Current slip no. is missing."
-  } else if (!params?.noofbags) {
-    flag = false;
-    errorMsg = "No. of bags are missing."
-  }
+  // if (!params?.entryType) {
+  //   flag = false;
+  //   errorMsg = "Entry type is missing."
+  // } else if (!params?.deliveryType) {
+  //   flag = false;
+  //   errorMsg = "Delivery type is missing."
+  // } else if (!params?.firmId) {
+  //   flag = false;
+  //   errorMsg = "Firm id is missing."
+  // } else if (!params?.commodityId) {
+  //   flag = false;
+  //   errorMsg = "Commodity id is missing."
+  // } else if (!params?.currentSlip) {
+  //   flag = false;
+  //   errorMsg = "Current slip is missing."
+  // } else if (!params?.bill) {
+  //   flag = false;
+  //   errorMsg = "Bill is missing."
+  // } else if (!params?.billNo) {
+  //   flag = false;
+  //   errorMsg = "Bill no. is missing."
+  // } else if (!params?.userId) {
+  //   flag = false;
+  //   errorMsg = "User id is missing."
+  // } else if (!params?.currentGrossWeight) {
+  //   flag = false;
+  //   errorMsg = "Gross weight is missing."
+  // } else if (!params?.currentTareWeight) {
+  //   flag = false;
+  //   errorMsg = "Tare weight is missing."
+  // } else if (!params?.currentNetWeight) {
+  //   flag = false;
+  //   errorMsg = "Net weight is missing."
+  // } else if (!params?.currentSlipNo) {
+  //   flag = false;
+  //   errorMsg = "Current slip no. is missing."
+  // } else if (!params?.noofbags) {
+  //   flag = false;
+  //   errorMsg = "No. of bags are missing."
+  // }
 
   return {
     flag,
