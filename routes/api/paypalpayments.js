@@ -3,19 +3,19 @@ const router = express.Router();
 
 const braintree = require("braintree");
 
-const gateway = new braintree.BraintreeGateway({
-    environment: braintree.Environment.Sandbox,
-    merchantId: "ypkk2s4s4njhg9qy",
-    publicKey: "bwyc5jhxzgnrydnz",
-    privateKey: "1119a6c9fdc181b129993e41ac68c705"
-});
-
 // const gateway = new braintree.BraintreeGateway({
 //     environment: braintree.Environment.Sandbox,
-//     merchantId: "kc9tcryhgcxfnnhj",
-//     publicKey: "39knnftgp3rmsp4z",
-//     privateKey: "d6073d6763f3188204df6030d47a47e8"
+//     merchantId: "ypkk2s4s4njhg9qy",
+//     publicKey: "bwyc5jhxzgnrydnz",
+//     privateKey: "1119a6c9fdc181b129993e41ac68c705"
 // });
+
+const gateway = new braintree.BraintreeGateway({
+    environment: braintree.Environment.Sandbox,
+    merchantId: "kc9tcryhgcxfnnhj",
+    publicKey: "39knnftgp3rmsp4z",
+    privateKey: "d6073d6763f3188204df6030d47a47e8"
+});
 
 router.get(
     "/getClientToken",
