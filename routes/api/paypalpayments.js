@@ -54,14 +54,14 @@ router.post(
             }, (err, result) => {
                 console.log(err, result);
 
-                const result = {
+                const response = {
                     status: res.statusCode,
                     data: {
                         success: result,
                         error: err
                     }
                 }
-                res.json(result);
+                res.json(response);
             });
         } catch (err) {
             console.error(err.message);
