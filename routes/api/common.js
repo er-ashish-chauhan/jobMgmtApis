@@ -16,11 +16,6 @@ const { root } = require('../../general')
 const FIREBASE_SERVER_KEY = "AAAA0hjZ4kQ:APA91bHbZ9-1DPhGGs2V-2EcbJym7EH1jEQqjaVm9XgJ2hxFPNJdjCDcmMR1Kph5G-oPsQpCnqPHE7F3f0Fab1KMxyypB5nQ-v49KqvmpIzPR0VgesRLST1Iq3bURp6N7bhheYLyLcsn";
 var FCM = require('fcm-node');
 var fcm = new FCM(FIREBASE_SERVER_KEY);
-// admin.initializeApp({
-//     credential: admin.credential.applicationDefault(),
-//     databaseURL: "https://aseiko-a9f2c.firebaseio.com",
-//     projectId: 'aseiko-a9f2c',
-// })
 
 // @route    GET api/common/firms
 // @desc     Get firms listing

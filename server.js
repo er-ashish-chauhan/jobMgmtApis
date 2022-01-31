@@ -9,6 +9,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", require("./routes/api/auth"));
 app.use("/api/jobs", require("./routes/api/jobs"));
 app.use("/api/common", require("./routes/api/common"));
+app.use("/api/paypal", require("./routes/api/paypalpayments"));
 
 app.use(express.static("uploads"));
 
