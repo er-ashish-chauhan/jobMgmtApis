@@ -5,6 +5,7 @@ const braintree = require("braintree");
 
 const gateway = new braintree.BraintreeGateway({
     environment: braintree.Environment.Sandbox,
+    accessToken: "access_token$sandbox$n8xdq5g8798c4nfx$d204bd08f792df0999747a27cff0abe6",
     merchantId: "ypkk2s4s4njhg9qy",
     publicKey: "bwyc5jhxzgnrydnz",
     privateKey: "1119a6c9fdc181b129993e41ac68c705"
@@ -47,6 +48,7 @@ router.post(
             gateway.transaction.sale({
                 amount: amount,
                 paymentMethodNonce: nonce,
+                merchantAccountId: "EUR",
                 deviceData: deviceData,
                 options: {
                     submitForSettlement: true
