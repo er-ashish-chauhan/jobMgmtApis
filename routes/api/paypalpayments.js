@@ -47,13 +47,12 @@ router.post(
             gateway.transaction.sale({
                 amount: amount,
                 paymentMethodNonce: nonce,
-                merchantAccountId: "EUR",
                 deviceData: deviceData,
                 options: {
                     submitForSettlement: true
                 }
             }, (err, result) => {
-                console.log(err, result);
+                console.log(err, "error from braintree");
 
                 const response = {
                     status: res.statusCode,
