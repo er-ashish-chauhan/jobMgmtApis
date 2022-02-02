@@ -83,8 +83,6 @@ router.post(
   async (req, res) => {
     try {
       const request = req.body;
-
-
       const entryType = formatVariable(request?.entryType);
       const deliveryType = formatVariable(request?.deliveryType);
       const firmId = formatVariable(request?.firmId);
