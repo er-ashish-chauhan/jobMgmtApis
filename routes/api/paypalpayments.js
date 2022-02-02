@@ -42,14 +42,14 @@ router.get(
 router.post(
     "/checkout",
     async (req, res) => {
-        const { nonce, clientToken, deviceData, amount } = req.body;
+        const { nonce, deviceData, amount } = req.body;
         try {
             gateway.transaction.sale({
                 amount: amount,
                 paymentMethodNonce: nonce,
                 deviceData: deviceData,
                 options: {
-                    submitForSettlement: true
+                    submitForSettlement: true,
                 }
             }, (err, result) => {
                 console.log(err, "error from braintree");

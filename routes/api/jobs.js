@@ -82,36 +82,37 @@ router.post(
   "/submitJob",
   async (req, res) => {
     try {
-      const {
-        entryType,
-        deliveryType,
-        firmId,
-        commodityId,
-        previousSlip = null,
-        currentSlip,
-        userId,
-        billNo,
-        bill,
-        currentGrossWeight,
-        currentTareWeight,
-        currentNetWeight,
-        previousSlipNo = null,
-        currentSlipNo,
-        noofbags,
-        truckNo,
-        currentDate,
-        kantaSlip = null,
-        kantaSlipNo = null,
-      } = req.body;
+      const request = req.body;
 
-      const validateFields = validateForm(req.body);
-      console.log(validateFields, "validateFields...")
-      if (!validateFields?.flag) {
-        return res.status(401).json({
-          status: res.statusCode,
-          error: { msg: validateFields?.errorMsg }
-        });
-      }
+
+      const entryType = formatVariable(request?.entryType);
+      const deliveryType = formatVariable(request?.deliveryType);
+      const firmId = formatVariable(request?.firmId);
+      const commodityId = formatVariable(request?.commodityId);
+      const previousSlip = formatVariable(request?.previousSlip);
+      const currentSlip = formatVariable(request?.currentSlip);
+      const userId = formatVariable(request?.userId);
+      const billNo = formatVariable(request?.billNo);
+      const bill = formatVariable(request?.bill);
+      const currentGrossWeight = formatVariable(request?.currentGrossWeight);
+      const currentTareWeight = formatVariable(request?.currentTareWeight);
+      const currentNetWeight = formatVariable(request?.currentNetWeight);
+      const previousSlipNo = formatVariable(request?.previousSlipNo);
+      const currentSlipNo = formatVariable(request?.currentSlipNo);
+      const noofbags = formatVariable(request?.noofbags);
+      const truckNo = formatVariable(request?.truckNo);
+      const currentDate = formatVariable(request?.currentDate);
+      const kantaSlip = formatVariable(request?.kantaSlip);
+      const kantaSlipNo = formatVariable(request?.kantaSlipNo);
+
+      // const validateFields = validateForm(req.body);
+      // console.log(validateFields, "validateFields...")
+      // if (!validateFields?.flag) {
+      //   return res.status(401).json({
+      //     status: res.statusCode,
+      //     error: { msg: validateFields?.errorMsg }
+      //   });
+      // }
       connection.execute(
         `INSERT INTO jobMeta
           (entryType, deliveryType, firmId, commodityId, previousSlip, 
@@ -141,6 +142,10 @@ router.post(
     }
   }
 );
+
+function formatVariable(str) {
+  return !str ? null : str
+}
 
 function validateForm(params) {
   let flag = true;
