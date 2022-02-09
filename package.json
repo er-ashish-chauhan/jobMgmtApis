@@ -10,10 +10,12 @@
   "author": "Abhishek",
   "license": "ISC",
   "dependencies": {
+    "agora-access-token": "^2.0.4",
     "bcryptjs": "^2.4.3",
     "braintree": "^3.8.0",
     "config": "^3.3.6",
-    "express": "^4.17.1",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.2",
     "express-validator": "^6.12.1",
     "fcm-node": "^1.6.1",
     "firebase-admin": "^9.11.1",

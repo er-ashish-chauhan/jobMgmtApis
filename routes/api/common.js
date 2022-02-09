@@ -8,6 +8,8 @@ const formidable = require("formidable");
 const path = require('path')
 const fs = require('fs')
 const { query, check, validationResult } = require("express-validator");
+const { RtcTokenBuilder, RtcRole, RtmTokenBuilder } = require('agora-access-token');
+const dotenv = require('dotenv');
 
 const connection = require("../../config/connection");
 const { root } = require('../../general')
@@ -15,6 +17,7 @@ const { root } = require('../../general')
 // var admin = require("firebase-admin");
 const FIREBASE_SERVER_KEY = "AAAA0hjZ4kQ:APA91bHbZ9-1DPhGGs2V-2EcbJym7EH1jEQqjaVm9XgJ2hxFPNJdjCDcmMR1Kph5G-oPsQpCnqPHE7F3f0Fab1KMxyypB5nQ-v49KqvmpIzPR0VgesRLST1Iq3bURp6N7bhheYLyLcsn";
 var FCM = require('fcm-node');
+const { RtmRole } = require("agora-access-token");
 var fcm = new FCM(FIREBASE_SERVER_KEY);
 
 // @route    GET api/common/firms
@@ -179,15 +182,15 @@ router.post(
         const { userToken, notifymessage } = req.body;
         try {
             var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
-                to: userToken, 
+                to: userToken,
                 notification: {
-                    title: 'Aseiko Skin', 
-                    body: notifymessage 
+                    title: 'Aseiko Skin',
+                    body: notifymessage
                 },
-                data: { }
+                data: {}
             };
-            
-            fcm.send(message, function(err, response){
+
+            fcm.send(message, function (err, response) {
                 if (err) {
                     console.log("Something has gone wrong!");
                     const result = {
@@ -209,6 +212,36 @@ router.post(
                 }
             });
 
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).send("Server error");
+        }
+    }
+);
+
+router.get(
+    "/agoraRTMToken",
+    async (req, res) => {
+        const APP_ID = "4fe1aedc2e6c43acb8116dc8a0fe2c21";
+        const APP_CERTIFICATE = "be45c73403334fc18726c1b8a3ed3393";
+        const PORT = 8080;
+        const expireTime = 3600;
+        const currentTime = Math.floor(Date.now() / 1000);
+        const privilegeExpireTime = currentTime + expireTime;
+
+        const { udid } = req.query;
+        console.log(udid, "udid")
+        try {
+            let token = RtmTokenBuilder.buildToken(APP_ID, APP_CERTIFICATE, udid, RtmRole.Rtm_User, privilegeExpireTime);
+            const result = {
+                status: res.statusCode,
+                data: {
+                    rtmToken: token,
+                    message: "Token generated successfully!"
+                }
+            }
+            res.json(result)
+            // let token = RtcTokenBuilder.buildTokenWithUid(APP_ID, APP_CERTIFICATE, channelName, udid, role, privilegeExpireTime);
         } catch (err) {
             console.error(err.message);
             res.status(500).send("Server error");
