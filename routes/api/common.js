@@ -249,4 +249,35 @@ router.get(
     }
 );
 
+
+outer.get(
+    "/agoraRTCToken",
+    async (req, res) => {
+        const APP_ID = "4fe1aedc2e6c43acb8116dc8a0fe2c21";
+        const APP_CERTIFICATE = "be45c73403334fc18726c1b8a3ed3393";
+        const PORT = 8080;
+        const expireTime = 3600;
+        const currentTime = Math.floor(Date.now() / 1000);
+        const privilegeExpireTime = currentTime + expireTime;
+
+        const { udid, role, channel } = req.query;
+        console.log(udid, "udid")
+        try {
+            let token = RtcTokenBuilder.buildTokenWithUid(APP_ID, APP_CERTIFICATE, channel, udid,
+                role = "1" ? RtcRole.PUBLISHER : RtcRole.SUBSCRIBER, privilegeExpireTime);
+            const result = {
+                status: res.statusCode,
+                data: {
+                    rtcToken: token,
+                    message: "Token generated successfully!"
+                }
+            }
+            res.json(result)
+            // let token = RtcTokenBuilder.buildTokenWithUid(APP_ID, APP_CERTIFICATE, channelName, udid, role, privilegeExpireTime);
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).send("Server error");
+        }
+    }
+);
 module.exports = router;
