@@ -264,7 +264,7 @@ router.get(
         console.log(udid, "udid")
         try {
             let token = RtcTokenBuilder.buildTokenWithUid(APP_ID, APP_CERTIFICATE, channel, udid,
-                role = "1" ? RtcRole.PUBLISHER : RtcRole.SUBSCRIBER, privilegeExpireTime);
+                role == "1" ? RtcRole.PUBLISHER : RtcRole.SUBSCRIBER, privilegeExpireTime);
             const result = {
                 status: res.statusCode,
                 data: {
