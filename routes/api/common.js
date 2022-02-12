@@ -250,7 +250,7 @@ router.get(
 );
 
 
-outer.get(
+router.get(
     "/agoraRTCToken",
     async (req, res) => {
         const APP_ID = "4fe1aedc2e6c43acb8116dc8a0fe2c21";
