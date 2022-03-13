@@ -33,8 +33,8 @@ router.get(
 
         const { searchText } = req.query;
         try {
-            const queryForExecute = searchText ? 'SELECT * FROM firm Where firm_name like "%' + searchText + '%"'
-                : `SELECT * FROM firm`
+            const queryForExecute = searchText ? 'SELECT * FROM firm Where firm_name like "%' + searchText + '%" AND status = 0'
+                : `SELECT * FROM firm Where status = 0`
             // Get firms
             connection.execute(
                 queryForExecute,
