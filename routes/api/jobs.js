@@ -111,26 +111,44 @@ router.post(
       //     error: { msg: validateFields?.errorMsg }
       //   });
       // }
-      connection.execute(
-        `INSERT INTO jobMeta
-          (entryType, deliveryType, firmId, commodityId, previousSlip, 
-            currentSlip, bill, billNo, addedBy, cGrossWeight, cTareWeight, cNetWeight, previousSlipNo, currentSlipNo, noOfBags, truckNo, kantaSlip, kantaSlipNo, recordCreated) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [entryType, deliveryType, firmId, commodityId, previousSlip, currentSlip, bill,
-          billNo, userId, currentGrossWeight, currentTareWeight, currentNetWeight,
-          previousSlipNo, currentSlipNo, noofbags, truckNo, kantaSlip, kantaSlipNo, currentDate],
-        async (err, result) => {
+      var userCoparty = null;
+      const queryForExecute = 'SELECT * FROM users Where id = ' + userId;
+
+      await connection.execute(
+        queryForExecute,
+        async (err, rows, fields) => {
           if (err) {
             console.error(err);
             throw err;
           }
+          if (rows.length) {
+            userCoparty = rows[0].coFirm
 
-          res.json({
-            status: res.statusCode,
-            data: {},
-            success: {
-              msg: "Entry added successfully."
-            }
-          })
+            connection.execute(
+              `INSERT INTO jobMeta
+                (entryType, deliveryType, firmId, commodityId, previousSlip, 
+                  currentSlip, bill, billNo, addedBy, cGrossWeight, cTareWeight, cNetWeight, previousSlipNo, currentSlipNo, noOfBags, truckNo, kantaSlip, kantaSlipNo, recordCreated, coparty) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+              [entryType, deliveryType, firmId, commodityId, previousSlip, currentSlip, bill,
+                billNo, userId, currentGrossWeight, currentTareWeight, currentNetWeight,
+                previousSlipNo, currentSlipNo, noofbags, truckNo, kantaSlip, kantaSlipNo, currentDate, userCoparty],
+              async (err, result) => {
+                if (err) {
+                  console.error(err);
+                  throw err;
+                }
+
+                res.json({
+                  status: res.statusCode,
+                  data: {},
+                  success: {
+                    msg: "Entry added successfully."
+                  }
+                })
+              }
+            );
+          } else {
+            res.status(400).send("User not found!");
+          }
         }
       );
 
