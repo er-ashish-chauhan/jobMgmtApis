@@ -31,10 +31,18 @@ router.get(
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { searchText } = req.query;
+        const { searchText,
+            type } = req.query;
+
+        var queryForExecute = searchText ? 'SELECT * FROM firm Where firm_name like "%' + searchText + '%" AND status = 0'
+            : `SELECT * FROM firm Where status = 0`
+
+        if (type && type == "out") {
+            queryForExecute = searchText ? 'SELECT firm_out.*, firm_locations.location as partyLocation FROM firm_out LEFT JOIN firm_locations ON firm_locations.id = firm_out.location Where partyName like "%' + searchText + '%" AND status = 0'
+                : `SELECT firm_out.*, firm_locations.location as partyLocation FROM firm_out LEFT JOIN firm_locations ON firm_locations.id = firm_out.location Where status = 0`
+        }
+
         try {
-            const queryForExecute = searchText ? 'SELECT * FROM firm Where firm_name like "%' + searchText + '%" AND status = 0'
-                : `SELECT * FROM firm Where status = 0`
             // Get firms
             connection.execute(
                 queryForExecute,
@@ -80,10 +88,19 @@ router.get(
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
+
+        const { searchText,
+            type } = req.query;
+
+        var queryForExecute = `SELECT commodities.id, commodities.commodity FROM commodities`;
+
+        if (type && type == "out") {
+            queryForExecute = `SELECT commodities_out.id, commodities_out.name, commodities_out.isGST as commodity FROM commodities_out`;
+        }
         try {
             // Get commodities
             connection.execute(
-                `SELECT * FROM commodities`,
+                queryForExecute,
                 async (err, rows, fields) => {
                     if (err) {
                         console.error(err);
