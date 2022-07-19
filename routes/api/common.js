@@ -133,6 +133,73 @@ router.get(
     }
 );
 
+// @route    GET api/common/getBargains
+// @desc     Get firms listing
+// @access   Public
+router.get(
+    "/getBargains",
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        const { searchText,
+            commodity,
+            party } = req.query;
+
+        if(!commodity || commodity.trim().length == 0){
+            return res.status(401).json({
+                status: res.statusCode,
+                error: { msg: "Must pass the commodity ID." }
+            });
+        }
+
+        if(!party || party.trim().length == 0){
+            return res.status(401).json({
+                status: res.statusCode,
+                error: { msg: "Must pass the party ID." }
+            });
+        }
+
+        var queryForExecute = `SELECT * FROM bargains_out WHERE commodityId =`+commodity+`&party =`+party;
+       
+        try {
+            // Get bargains
+            connection.execute(
+                queryForExecute,
+                async (err, rows, fields) => {
+                    if (err) {
+                        console.error(err);
+                        throw err;
+                    }
+                    if (rows.length) {
+                        const result = {
+                            status: res.statusCode,
+                            data: {
+                                bargains: rows,
+                                totalRecords: rows.length
+                            }
+                        }
+                        res.json(result)
+                    } else {
+                        return res
+                            .status(401)
+                            .json({
+                                status: res.statusCode,
+                                data: {},
+                                error: { msg: "No records found" }
+                            });
+                    }
+                }
+            );
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).send("Server error");
+        }
+    }
+);
+
 // @route    POST api/common/uploadImage
 // @desc     Upload image and return image url
 // @access   Public
