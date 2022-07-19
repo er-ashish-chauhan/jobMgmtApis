@@ -200,6 +200,55 @@ router.get(
     }
 );
 
+// @route    GET api/common/coparties
+// @desc     Get firms listing
+// @access   Public
+router.get(
+    "/coparties",
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        var queryForExecute = `SELECT * FROM coparties`;
+
+        try {
+            // Get coparties
+            connection.execute(
+                queryForExecute,
+                async (err, rows, fields) => {
+                    if (err) {
+                        console.error(err);
+                        throw err;
+                    }
+                    if (rows.length) {
+                        const result = {
+                            status: res.statusCode,
+                            data: {
+                                coparties: rows,
+                                totalRecords: rows.length
+                            }
+                        }
+                        res.json(result)
+                    } else {
+                        return res
+                            .status(401)
+                            .json({
+                                status: res.statusCode,
+                                data: {},
+                                error: { msg: "No records found" }
+                            });
+                    }
+                }
+            );
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).send("Server error");
+        }
+    }
+);
+
 // @route    POST api/common/uploadImage
 // @desc     Upload image and return image url
 // @access   Public
